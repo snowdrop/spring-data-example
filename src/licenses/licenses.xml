@@ -345,7 +345,8 @@
       <version>1.2</version>
       <licenses>
         <license>
-          <name>Common Development and Distribution License (CDDL) and GNU Public License v.2 w/Classpath Exception</name>
+          <name>Common Development and Distribution License (CDDL) and GNU Public License v.2 w/Classpath Exception
+          </name>
           <url>https://netbeans.org/cddl-gplv2.html</url>
         </license>
       </licenses>

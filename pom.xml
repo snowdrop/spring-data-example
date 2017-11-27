@@ -102,6 +102,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.module</groupId>
+          <artifactId>jackson-module-kotlin</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -140,7 +146,7 @@
 
   </dependencies>
 
-  <build>
+  <!-- build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -160,18 +166,8 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <classpathDependencyExcludes>
-            <classpathDependencyExclude>org.arquillian.cube:arquillian-cube-openshift</classpathDependencyExclude>
-            <classpathDependencyExclude>org.arquillian.cube:arquillian-cube-kubernetes</classpathDependencyExclude>
-          </classpathDependencyExcludes>
-        </configuration>
-      </plugin>
     </plugins>
-  </build>
+  </build -->
 
   <!-- profiles>
     <profile>

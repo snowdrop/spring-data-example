@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -56,6 +57,17 @@ public class FruitController {
         this.store = store;
     }
 
+    private Fruit put(Fruit fruit) {
+        store.put(fruit.getId(), fruit);
+        return fruit;
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Fruit findByUsage(@RequestParam(name = "word") String word) {
+        return repository.findByUsageContains(word);
+    }
+
     @ResponseBody
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Fruit get(@PathVariable("id") Integer id) {
@@ -68,11 +80,11 @@ public class FruitController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Fruit> getAll() {
         Spliterator<Fruit> fruits = repository.findAll()
-                .spliterator();
+            .spliterator();
 
         return StreamSupport
-                .stream(fruits, false)
-                .collect(Collectors.toList());
+            .stream(fruits, false)
+            .collect(Collectors.toList());
     }
 
     @ResponseBody
@@ -82,7 +94,7 @@ public class FruitController {
         Integer newId = verifyCorrectPayload(fruit);
         fruit.setId(newId);
 
-        return store.put(fruit.getId(), fruit);
+        return put(fruit);
     }
 
     @ResponseBody
@@ -93,7 +105,7 @@ public class FruitController {
         verifyCorrectPayload(fruit);
 
         fruit.setId(id);
-        return store.put(id, fruit);
+        return put(fruit);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

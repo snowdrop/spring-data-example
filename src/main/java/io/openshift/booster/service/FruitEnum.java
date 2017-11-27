@@ -16,8 +16,22 @@
 
 package io.openshift.booster.service;
 
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
+public enum FruitEnum {
+    CHERRY(1, "Cherry", "Cherry was a brand of keyboard."),
+    APPLE(2, "Apple", "Apple headquerter is in Cupertino."),
+    BANANA(3, "Banana", "Monkies like bananas.");
 
-public interface FruitRepository extends HibernateSearchRepository<Fruit, Integer> {
-    Fruit findByUsageContains(String word);
+    private int id;
+    private String name;
+    private String usage;
+
+    FruitEnum(int id, String name, String usage) {
+        this.id = id;
+        this.name = name;
+        this.usage = usage;
+    }
+
+    public Fruit toFruit() {
+        return new Fruit(id, name, usage);
+    }
 }

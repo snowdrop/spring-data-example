@@ -17,6 +17,7 @@
 package io.openshift.booster;
 
 import io.openshift.booster.service.Fruit;
+import io.openshift.booster.service.FruitEnum;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -75,9 +76,10 @@ public class BoosterApplication {
         public void onApplicationEvent(final ApplicationReadyEvent event) {
             try {
                 store.clear();
-                store.put(1, new Fruit("Cherry"));
-                store.put(2, new Fruit("Apple"));
-                store.put(3, new Fruit("Banana"));
+                for (FruitEnum fe : FruitEnum.values()) {
+                    Fruit f = fe.toFruit();
+                    store.put(f.getId(), f);
+                }
             } catch (Exception e) {
                 System.out.println("An error occurred trying to build data store: " + e.toString());
             }

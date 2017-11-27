@@ -19,6 +19,7 @@ package io.openshift.booster.service;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 import org.springframework.data.annotation.Id;
 
 @Indexed
@@ -31,11 +32,16 @@ public class Fruit {
     @Field
     private String name;
 
+    @Field(store = Store.NO)
+    private String usage;
+
     public Fruit() {
     }
 
-    public Fruit(String type) {
+    public Fruit(int id, String type, String usage) {
+        this.id = id;
         this.name = type;
+        this.usage = usage;
     }
 
     public Integer getId() {
@@ -52,5 +58,13 @@ public class Fruit {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUsage() {
+        return usage;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 }

@@ -36,39 +36,39 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class OpenShiftIT {
 
-  @RouteURL("${app.name}")
-  private URL url;
+    @RouteURL("${app.name}")
+    private URL url;
 
-  @Before
-  public void setup() {
-    RestAssured.baseURI = url + "api/fruits";
-  }
+    @Before
+    public void setup() {
+        RestAssured.baseURI = url + "api/fruits";
+    }
 
-  @Test
-  public void testPostGetAndDelete() {
-    Integer id = given()
-      .contentType(ContentType.JSON)
-      .body(Collections.singletonMap("name", "Lemon"))
-      .when()
-      .post()
-      .then()
-      .statusCode(201)
-      .body("id", not(isEmptyString()))
-      .body("name", is("Lemon"))
-      .extract()
-      .response()
-      .path("id");
+    @Test
+    public void testPostGetAndDelete() {
+        Integer id = given()
+            .contentType(ContentType.JSON)
+            .body(Collections.singletonMap("name", "Lemon"))
+            .when()
+            .post()
+            .then()
+            .statusCode(201)
+            .body("id", not(isEmptyString()))
+            .body("name", is("Lemon"))
+            .extract()
+            .response()
+            .path("id");
 
-    when().get(id.toString())
-      .then()
-      .statusCode(200)
-      .body("id", is(id))
-      .body("name", is("Lemon"));
+        when().get(id.toString())
+            .then()
+            .statusCode(200)
+            .body("id", is(id))
+            .body("name", is("Lemon"));
 
-    when().delete(id.toString())
-      .then()
-      .statusCode(204);
-  }
+        when().delete(id.toString())
+            .then()
+            .statusCode(204);
+    }
 
 }
 

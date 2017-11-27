@@ -16,6 +16,14 @@
 
 package io.openshift.booster;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.when;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.junit.Assert.assertFalse;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
@@ -23,6 +31,7 @@ import java.util.TreeSet;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import io.openshift.booster.service.Fruit;
+import io.openshift.booster.service.FruitEnum;
 import io.openshift.booster.service.FruitRepository;
 import org.infinispan.Cache;
 import org.junit.Before;
@@ -33,17 +42,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.when;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.junit.Assert.assertFalse;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BoosterApplicationTest {
+public class BoosterApplicationTests {
 
     @Value("${local.server.port}")
     private int port;
@@ -75,150 +76,166 @@ public class BoosterApplicationTest {
     }
 
     @Test
+    public void testFindByUsage() {
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
+        Fruit banana = save(FruitEnum.BANANA.toFruit());
+        when().get("/find?word=brand")
+            .then()
+            .statusCode(200)
+            .body("id", is(cherry.getId()))
+            .body("name", is(cherry.getName()));
+        when().get("/find?word=like")
+            .then()
+            .statusCode(200)
+            .body("id", is(banana.getId()))
+            .body("name", is(banana.getName()));
+    }
+
+    @Test
     public void testGetAll() {
-        Fruit cherry = save(new Fruit("Cherry"));
-        Fruit apple = save(new Fruit("Apple"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
+        Fruit apple = save(FruitEnum.APPLE.toFruit());
         when().get()
-                .then()
-                .statusCode(200)
-                .body("id", hasItems(cherry.getId(), apple.getId()))
-                .body("name", hasItems(cherry.getName(), apple.getName()));
+            .then()
+            .statusCode(200)
+            .body("id", hasItems(cherry.getId(), apple.getId()))
+            .body("name", hasItems(cherry.getName(), apple.getName()));
     }
 
     @Test
     public void testGetEmptyArray() {
         when().get()
-                .then()
-                .statusCode(200)
-                .body(is("[]"));
+            .then()
+            .statusCode(200)
+            .body(is("[]"));
     }
 
     @Test
     public void testGetOne() {
-        Fruit cherry = save(new Fruit("Cherry"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
         when().get(String.valueOf(cherry.getId()))
-                .then()
-                .statusCode(200)
-                .body("id", is(cherry.getId()))
-                .body("name", is(cherry.getName()));
+            .then()
+            .statusCode(200)
+            .body("id", is(cherry.getId()))
+            .body("name", is(cherry.getName()));
     }
 
     @Test
     public void testGetNotExisting() {
         when().get("0")
-                .then()
-                .statusCode(404);
+            .then()
+            .statusCode(404);
     }
 
     @Test
     public void testPost() {
         given().contentType(ContentType.JSON)
-                .body(Collections.singletonMap("name", "Cherry"))
-                .when()
-                .post()
-                .then()
-                .statusCode(201)
-                .body("id", not(isEmptyString()))
-                .body("name", is("Cherry"));
+            .body(Collections.singletonMap("name", "Cherry"))
+            .when()
+            .post()
+            .then()
+            .statusCode(201)
+            .body("id", not(isEmptyString()))
+            .body("name", is("Cherry"));
     }
 
     @Test
     public void testPostWithWrongPayload() {
         given().contentType(ContentType.JSON)
-                .body(Collections.singletonMap("id", 0))
-                .when()
-                .post()
-                .then()
-                .statusCode(422);
+            .body(Collections.singletonMap("id", 0))
+            .when()
+            .post()
+            .then()
+            .statusCode(422);
     }
 
     @Test
     public void testPostWithNonJsonPayload() {
         given().contentType(ContentType.XML)
-                .when()
-                .post()
-                .then()
-                .statusCode(415);
+            .when()
+            .post()
+            .then()
+            .statusCode(415);
     }
 
     @Test
     public void testPostWithEmptyPayload() {
         given().contentType(ContentType.JSON)
-                .when()
-                .post()
-                .then()
-                .statusCode(415);
+            .when()
+            .post()
+            .then()
+            .statusCode(415);
     }
 
     @Test
     public void testPut() {
-        Fruit cherry = save(new Fruit("Cherry"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
         given().contentType(ContentType.JSON)
-                .body(Collections.singletonMap("name", "Lemon"))
-                .when()
-                .put(String.valueOf(cherry.getId()))
-                .then()
-                .statusCode(200)
-                .body("id", is(cherry.getId()))
-                .body("name", is("Lemon"));
+            .body(Collections.singletonMap("name", "Lemon"))
+            .when()
+            .put(String.valueOf(cherry.getId()))
+            .then()
+            .statusCode(200)
+            .body("id", is(cherry.getId()))
+            .body("name", is("Lemon"));
 
     }
 
     @Test
     public void testPutNotExisting() {
         given().contentType(ContentType.JSON)
-                .body(Collections.singletonMap("name", "Lemon"))
-                .when()
-                .put("/0")
-                .then()
-                .statusCode(404);
+            .body(Collections.singletonMap("name", "Lemon"))
+            .when()
+            .put("/0")
+            .then()
+            .statusCode(404);
     }
 
     @Test
     public void testPutWithWrongPayload() {
-        Fruit cherry = save(new Fruit("Cherry"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
         given().contentType(ContentType.JSON)
-                .body(Collections.singletonMap("id", 0))
-                .when()
-                .put(String.valueOf(cherry.getId()))
-                .then()
-                .statusCode(422);
+            .body(Collections.singletonMap("id", 0))
+            .when()
+            .put(String.valueOf(cherry.getId()))
+            .then()
+            .statusCode(422);
     }
 
     @Test
     public void testPutWithNonJsonPayload() {
-        Fruit cherry = save(new Fruit("Cherry"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
         given().contentType(ContentType.XML)
-                .when()
-                .put(String.valueOf(cherry.getId()))
-                .then()
-                .statusCode(415);
+            .when()
+            .put(String.valueOf(cherry.getId()))
+            .then()
+            .statusCode(415);
     }
 
     @Test
     public void testPutWithEmptyPayload() {
-        Fruit cherry = save(new Fruit("Cherry"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
         given().contentType(ContentType.JSON)
-                .when()
-                .put(String.valueOf(cherry.getId()))
-                .then()
-                .statusCode(415);
+            .when()
+            .put(String.valueOf(cherry.getId()))
+            .then()
+            .statusCode(415);
     }
 
     @Test
     public void testDelete() {
-        Fruit cherry = save(new Fruit("Cherry"));
+        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
         when().delete(String.valueOf(cherry.getId()))
-                .then()
-                .statusCode(204);
+            .then()
+            .statusCode(204);
         assertFalse(fruitStore.containsKey(cherry.getId()));
     }
 
     @Test
     public void testDeleteNotExisting() {
         when().delete("/0")
-                .then()
-                .statusCode(404);
+            .then()
+            .statusCode(404);
     }
 
 }
