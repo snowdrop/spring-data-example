@@ -44,7 +44,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BoosterApplicationTests {
+public class BoosterApplicationTest {
 
     @Value("${local.server.port}")
     private int port;
