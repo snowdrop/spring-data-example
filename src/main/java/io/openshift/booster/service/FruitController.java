@@ -16,19 +16,15 @@
 
 package io.openshift.booster.service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Spliterator;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import io.openshift.booster.exception.NotFoundException;
 import io.openshift.booster.exception.UnprocessableEntityException;
 import io.openshift.booster.exception.UnsupportedMediaTypeException;
-import org.infinispan.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,17 +45,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class FruitController {
 
     private final FruitRepository repository;
-    private final Cache<Integer, Fruit> store;
 
     @Autowired
-    public FruitController(FruitRepository repository, Cache<Integer, Fruit> store) {
+    public FruitController(FruitRepository repository) {
         this.repository = repository;
-        this.store = store;
     }
 
-    private Fruit put(Fruit fruit) {
-        store.put(fruit.getId(), fruit);
-        return fruit;
+    private Fruit save(Fruit fruit) {
+        return repository.save(fruit);
     }
 
     @ResponseBody
@@ -73,7 +66,7 @@ public class FruitController {
     public Fruit get(@PathVariable("id") Integer id) {
         verifyFruitExists(id);
 
-        return store.get(id);
+        return repository.findById(id).get();
     }
 
     @ResponseBody
@@ -94,7 +87,7 @@ public class FruitController {
         Integer newId = verifyCorrectPayload(fruit);
         fruit.setId(newId);
 
-        return put(fruit);
+        return save(fruit);
     }
 
     @ResponseBody
@@ -105,7 +98,7 @@ public class FruitController {
         verifyCorrectPayload(fruit);
 
         fruit.setId(id);
-        return put(fruit);
+        return save(fruit);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -113,11 +106,11 @@ public class FruitController {
     public void delete(@PathVariable("id") Integer id) {
         verifyFruitExists(id);
 
-        store.remove(id);
+        repository.deleteById(id);
     }
 
     private void verifyFruitExists(Integer id) {
-        if (!store.containsKey(id)) {
+        if (!repository.existsById(id)) {
             throw new NotFoundException(String.format("Fruit with id=%d was not found", id));
         }
     }
@@ -131,11 +124,7 @@ public class FruitController {
             throw new UnprocessableEntityException("Id field must be generated");
         }
 
-        Set<Integer> ids = new TreeSet<>(Collections.reverseOrder());
-        for (Fruit f : getAll()) {
-            ids.add(f.getId());
-        }
-        return (ids.isEmpty() ? 1 : (ids.iterator().next() + 1));
+        return FruitUtils.generateNextId(getAll());
     }
 
 }

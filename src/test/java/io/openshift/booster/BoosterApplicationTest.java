@@ -25,15 +25,13 @@ import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import io.openshift.booster.service.Fruit;
 import io.openshift.booster.service.FruitEnum;
 import io.openshift.booster.service.FruitRepository;
-import org.infinispan.Cache;
+import io.openshift.booster.service.FruitUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,26 +50,17 @@ public class BoosterApplicationTest {
     @Autowired
     private FruitRepository fruitRepository;
 
-    @Autowired
-    private Cache<Integer, Fruit> fruitStore;
-
     @Before
     public void beforeTest() {
-        fruitStore.clear();
+        fruitRepository.deleteAll();
         RestAssured.baseURI = String.format("http://localhost:%d/api/fruits", port);
-    }
-
-    private int generateId() {
-        Set<Integer> ids = new TreeSet<>(Collections.reverseOrder());
-        ids.addAll(fruitStore.keySet());
-        return (ids.isEmpty() ? 1 : (ids.iterator().next() + 1));
     }
 
     private Fruit save(Fruit fruit) {
         if (fruit.getId() == null) {
-            fruit.setId(generateId());
+            fruit.setId(FruitUtils.generateNextId(fruitRepository.findAll()));
         }
-        fruitStore.put(fruit.getId(), fruit);
+        fruitRepository.save(fruit);
         return fruit;
     }
 
@@ -228,7 +217,7 @@ public class BoosterApplicationTest {
         when().delete(String.valueOf(cherry.getId()))
             .then()
             .statusCode(204);
-        assertFalse(fruitStore.containsKey(cherry.getId()));
+        assertFalse(fruitRepository.existsById(cherry.getId()));
     }
 
     @Test
