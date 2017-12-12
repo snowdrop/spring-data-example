@@ -24,15 +24,19 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertFalse;
 
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import io.openshift.booster.service.Fruit;
-import io.openshift.booster.service.FruitEnum;
-import io.openshift.booster.service.FruitRepository;
-import io.openshift.booster.service.FruitUtils;
+import io.openshift.booster.service.Book;
+import io.openshift.booster.service.BookEnum;
+import io.openshift.booster.service.BookRepository;
+import io.openshift.booster.service.BookUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,47 +52,73 @@ public class BoosterApplicationTest {
     private int port;
 
     @Autowired
-    private FruitRepository fruitRepository;
+    private BookRepository bookRepository;
 
     @Before
     public void beforeTest() {
-        fruitRepository.deleteAll();
-        RestAssured.baseURI = String.format("http://localhost:%d/api/fruits", port);
+        bookRepository.deleteAll();
+        RestAssured.baseURI = String.format("http://localhost:%d/api/books", port);
     }
 
-    private Fruit save(Fruit fruit) {
-        if (fruit.getId() == null) {
-            fruit.setId(FruitUtils.generateNextId(fruitRepository.findAll()));
+    private Book save(Book book) {
+        if (book.getId() == null) {
+            book.setId(BookUtils.generateNextId(bookRepository.findAll()));
         }
-        fruitRepository.save(fruit);
-        return fruit;
+        bookRepository.save(book);
+        return book;
     }
 
     @Test
-    public void testFindByUsage() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
-        Fruit banana = save(FruitEnum.BANANA.toFruit());
-        when().get("/find?word=brand")
+    public void testFindByTitle() {
+        Book gf = save(BookEnum.GF1.toBook());
+        when().get("/findTitle?title=godf")
             .then()
             .statusCode(200)
-            .body("id", is(cherry.getId()))
-            .body("name", is(cherry.getName()));
-        when().get("/find?word=like")
+            .body("id", hasItems(gf.getId()))
+            .body("title", hasItems(gf.getTitle()));
+    }
+
+    @Test
+    public void testFindByWord() {
+        Book sw = save(BookEnum.STAR_WARS.toBook());
+        Book hp1 = save(BookEnum.HP1.toBook());
+        when().get("/findWord?word=force")
             .then()
             .statusCode(200)
-            .body("id", is(banana.getId()))
-            .body("name", is(banana.getName()));
+            .body("id", hasItems(sw.getId()))
+            .body("title", hasItems(sw.getTitle()));
+        when().get("/findWord?word=magic")
+            .then()
+            .statusCode(200)
+            .body("id", hasItems(hp1.getId()))
+            .body("title", hasItems(hp1.getTitle()));
+    }
+
+    @Test
+    public void testFindByExample() {
+        Book ccf = save(BookEnum.CCF.toBook());
+        Map<String, String> example = new HashMap<>();
+        example.put("orderBy", "releaseDate");
+        example.put("author", "Roald Dahl");
+        given().contentType(ContentType.JSON)
+            .body(example)
+            .when()
+            .post("/findForm")
+            .then()
+            .statusCode(200)
+            .body("id", hasItems(ccf.getId()))
+            .body("title", hasItems(ccf.getTitle()));
     }
 
     @Test
     public void testGetAll() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
-        Fruit apple = save(FruitEnum.APPLE.toFruit());
+        Book sw = save(BookEnum.STAR_WARS.toBook());
+        Book lotr = save(BookEnum.LOTR.toBook());
         when().get()
             .then()
             .statusCode(200)
-            .body("id", hasItems(cherry.getId(), apple.getId()))
-            .body("name", hasItems(cherry.getName(), apple.getName()));
+            .body("id", hasItems(sw.getId(), lotr.getId()))
+            .body("title", hasItems(sw.getTitle(), lotr.getTitle()));
     }
 
     @Test
@@ -101,12 +131,12 @@ public class BoosterApplicationTest {
 
     @Test
     public void testGetOne() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
-        when().get(String.valueOf(cherry.getId()))
+        Book sw = save(BookEnum.STAR_WARS.toBook());
+        when().get(String.valueOf(sw.getId()))
             .then()
             .statusCode(200)
-            .body("id", is(cherry.getId()))
-            .body("name", is(cherry.getName()));
+            .body("id", is(sw.getId()))
+            .body("title", is(sw.getTitle()));
     }
 
     @Test
@@ -118,14 +148,19 @@ public class BoosterApplicationTest {
 
     @Test
     public void testPost() {
+        Map<String, String> book = new HashMap<>();
+        book.put("title", "Kubernetes in Action");
+        book.put("author", "Marko Luksa");
+        book.put("content", "K8s. OpenShift.");
+        book.put("releaseDate", LocalDate.of(2017, 8, 1).toString());
         given().contentType(ContentType.JSON)
-            .body(Collections.singletonMap("name", "Cherry"))
+            .body(book)
             .when()
             .post()
             .then()
             .statusCode(201)
             .body("id", not(isEmptyString()))
-            .body("name", is("Cherry"));
+            .body("title", is("Kubernetes in Action"));
     }
 
     @Test
@@ -158,22 +193,34 @@ public class BoosterApplicationTest {
 
     @Test
     public void testPut() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
+        Book sw = save(BookEnum.STAR_WARS.toBook());
+
+        Map<String, String> book = new HashMap<>();
+        book.put("title", "Kubernetes in Action");
+        book.put("author", "Marko Luksa");
+        book.put("content", "K8s. OpenShift.");
+        book.put("releaseDate", LocalDate.of(2017, 8, 1).toString());
+
         given().contentType(ContentType.JSON)
-            .body(Collections.singletonMap("name", "Lemon"))
+            .body(book)
             .when()
-            .put(String.valueOf(cherry.getId()))
+            .put(String.valueOf(sw.getId()))
             .then()
             .statusCode(200)
-            .body("id", is(cherry.getId()))
-            .body("name", is("Lemon"));
-
+            .body("id", is(sw.getId()))
+            .body("title", is("Kubernetes in Action"));
     }
 
     @Test
     public void testPutNotExisting() {
+        Map<String, String> book = new HashMap<>();
+        book.put("title", "Kubernetes in Action");
+        book.put("author", "Marko Luksa");
+        book.put("content", "K8s. OpenShift.");
+        book.put("releaseDate", LocalDate.of(2017, 8, 1).toString());
+
         given().contentType(ContentType.JSON)
-            .body(Collections.singletonMap("name", "Lemon"))
+            .body(book)
             .when()
             .put("/0")
             .then()
@@ -182,42 +229,42 @@ public class BoosterApplicationTest {
 
     @Test
     public void testPutWithWrongPayload() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
+        Book sw = save(BookEnum.STAR_WARS.toBook());
         given().contentType(ContentType.JSON)
             .body(Collections.singletonMap("id", 0))
             .when()
-            .put(String.valueOf(cherry.getId()))
+            .put(String.valueOf(sw.getId()))
             .then()
             .statusCode(422);
     }
 
     @Test
     public void testPutWithNonJsonPayload() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
+        Book sw = save(BookEnum.STAR_WARS.toBook());
         given().contentType(ContentType.XML)
             .when()
-            .put(String.valueOf(cherry.getId()))
+            .put(String.valueOf(sw.getId()))
             .then()
             .statusCode(415);
     }
 
     @Test
     public void testPutWithEmptyPayload() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
+        Book sw = save(BookEnum.STAR_WARS.toBook());
         given().contentType(ContentType.JSON)
             .when()
-            .put(String.valueOf(cherry.getId()))
+            .put(String.valueOf(sw.getId()))
             .then()
             .statusCode(415);
     }
 
     @Test
     public void testDelete() {
-        Fruit cherry = save(FruitEnum.CHERRY.toFruit());
-        when().delete(String.valueOf(cherry.getId()))
+        Book sw = save(BookEnum.STAR_WARS.toBook());
+        when().delete(String.valueOf(sw.getId()))
             .then()
             .statusCode(204);
-        assertFalse(fruitRepository.existsById(cherry.getId()));
+        assertFalse(bookRepository.existsById(sw.getId()));
     }
 
     @Test

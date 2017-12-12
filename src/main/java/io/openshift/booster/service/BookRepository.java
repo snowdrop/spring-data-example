@@ -16,22 +16,19 @@
 
 package io.openshift.booster.service;
 
-public enum FruitEnum {
-    CHERRY(1, "Cherry", "Cherry was a brand of keyboard."),
-    APPLE(2, "Apple", "Apple headquerter is in Cupertino."),
-    BANANA(3, "Banana", "Monkies like bananas.");
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Stream;
 
-    private int id;
-    private String name;
-    private String usage;
+import me.snowdrop.data.hibernatesearch.repository.HibernateSearchCrudRepository;
+import org.springframework.data.domain.Pageable;
 
-    FruitEnum(int id, String name, String usage) {
-        this.id = id;
-        this.name = name;
-        this.usage = usage;
-    }
+public interface BookRepository extends HibernateSearchCrudRepository<Book, Integer> {
+    Stream<Book> findByTitleLike(String title);
 
-    public Fruit toFruit() {
-        return new Fruit(id, name, usage);
-    }
+    List<Book> findByReleaseDate(LocalDate date, Pageable pageable);
+
+    List<Book> findByAuthor(String author, Pageable pageable);
+
+    List<Book> findByContentContains(String content, Pageable pageable);
 }

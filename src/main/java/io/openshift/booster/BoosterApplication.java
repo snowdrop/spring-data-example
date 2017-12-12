@@ -16,8 +16,8 @@
 
 package io.openshift.booster;
 
-import io.openshift.booster.service.Fruit;
-import io.openshift.booster.service.FruitEnum;
+import io.openshift.booster.service.Book;
+import io.openshift.booster.service.BookEnum;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -48,7 +48,7 @@ public class BoosterApplication {
         cacheCfg.jmxStatistics().disable();
         cacheCfg.indexing()
             .index(Index.ALL)
-            .addIndexedEntity(Fruit.class)
+            .addIndexedEntity(Book.class)
             .addProperty("default.directory_provider", "local-heap")
             .addProperty("lucene_version", "LUCENE_CURRENT");
 
@@ -56,19 +56,19 @@ public class BoosterApplication {
     }
 
     @Bean
-    public Cache<Integer, Fruit> getStore(EmbeddedCacheManager cacheManager) {
+    public Cache<Integer, Book> getStore(EmbeddedCacheManager cacheManager) {
         return cacheManager.getCache();
     }
 
     @Bean
-    public BuildDataStore buildDataStore(Cache<Integer, Fruit> store) {
+    public BuildDataStore buildDataStore(Cache<Integer, Book> store) {
         return new BuildDataStore(store);
     }
 
     public class BuildDataStore implements ApplicationListener<ApplicationReadyEvent> {
-        private Cache<Integer, Fruit> store;
+        private Cache<Integer, Book> store;
 
-        public BuildDataStore(Cache<Integer, Fruit> store) {
+        public BuildDataStore(Cache<Integer, Book> store) {
             this.store = store;
         }
 
@@ -76,8 +76,8 @@ public class BoosterApplication {
         public void onApplicationEvent(final ApplicationReadyEvent event) {
             try {
                 store.clear();
-                for (FruitEnum fe : FruitEnum.values()) {
-                    Fruit f = fe.toFruit();
+                for (BookEnum fe : BookEnum.values()) {
+                    Book f = fe.toBook();
                     store.put(f.getId(), f);
                 }
             } catch (Exception e) {

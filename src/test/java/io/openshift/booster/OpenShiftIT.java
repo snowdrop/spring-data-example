@@ -24,6 +24,8 @@ import static org.hamcrest.Matchers.isEmptyString;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -41,20 +43,24 @@ public class OpenShiftIT {
 
     @Before
     public void setup() {
-        RestAssured.baseURI = url + "api/fruits";
+        RestAssured.baseURI = url + "api/books";
     }
 
     @Test
     public void testPostGetAndDelete() {
+        String title = "Tralala";
+        Map<String, String> book = new HashMap<>();
+        book.put("title", title);
+
         Integer id = given()
             .contentType(ContentType.JSON)
-            .body(Collections.singletonMap("name", "Lemon"))
+            .body(book)
             .when()
             .post()
             .then()
             .statusCode(201)
             .body("id", not(isEmptyString()))
-            .body("name", is("Lemon"))
+            .body("title", is(title))
             .extract()
             .response()
             .path("id");
@@ -63,7 +69,7 @@ public class OpenShiftIT {
             .then()
             .statusCode(200)
             .body("id", is(id))
-            .body("name", is("Lemon"));
+            .body("title", is(title));
 
         when().delete(id.toString())
             .then()

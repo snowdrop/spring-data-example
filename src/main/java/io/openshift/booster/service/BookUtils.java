@@ -16,8 +16,15 @@
 
 package io.openshift.booster.service;
 
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchCrudRepository;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
-public interface FruitRepository extends HibernateSearchCrudRepository<Fruit, Integer> {
-    Fruit findByUsageContains(String word);
+public final class BookUtils {
+    public static int generateNextId(Iterable<Book> all) {
+        final Set<Integer> ids = new TreeSet<>(Collections.reverseOrder());
+        all.forEach(fruit -> ids.add(fruit.getId()));
+        return (ids.isEmpty() ? 1 : (ids.iterator().next() + 1));
+
+    }
 }
