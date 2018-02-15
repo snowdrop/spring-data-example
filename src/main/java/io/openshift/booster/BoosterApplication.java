@@ -18,7 +18,7 @@ package io.openshift.booster;
 
 import io.openshift.booster.service.Book;
 import io.openshift.booster.service.BookEnum;
-import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
+import me.snowdrop.data.core.repository.config.EnableSnowdropRepositories;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.cache.Index;
@@ -32,7 +32,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableHibernateSearchRepositories
+@EnableSnowdropRepositories
 public class BoosterApplication {
 
     public static void main(String[] args) {

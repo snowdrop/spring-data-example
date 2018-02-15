@@ -19,18 +19,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.openshift.booster</groupId>
-  <artifactId>spring-boot-hibernate-search</artifactId>
+  <artifactId>spring-boot-snowdrop-spring-data</artifactId>
   <version>1-SNAPSHOT</version>
 
-  <name>Spring Boot - Hibernate Search Booster</name>
-  <description>Spring Boot - Hibernate Search Booster</description>
+  <name>Spring Boot - Snowdrop Spring Data Booster</name>
+  <description>Spring Boot - Snowdrop Spring Data Booster</description>
 
   <properties>
     <!-- Spring -->
     <spring.version>5.0.0.RELEASE</spring.version>
     <springboot.version>2.0.0.M5</springboot.version>
     <springdata.version>2.0.0.RELEASE</springdata.version>
-    <springdata.hibernatesearch.version>1.0.0-SNAPSHOT</springdata.hibernatesearch.version>
+    <springdata.snowdrop.version>1.0.0-SNAPSHOT</springdata.snowdrop.version>
     <!-- Arquillian -->
     <arquillian.version>1.1.13.Final</arquillian.version>
     <arquillian.cube.version>1.10.0</arquillian.cube.version>
@@ -64,8 +64,8 @@
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search-starter-infinispan-embedded</artifactId>
-        <version>${springdata.hibernatesearch.version}</version>
+        <artifactId>spring-data-snowdrop-starter-infinispan-embedded</artifactId>
+        <version>${springdata.snowdrop.version}</version>
       </dependency>
 
       <dependency>
@@ -96,7 +96,7 @@
   <dependencies>
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search-starter-infinispan-embedded</artifactId>
+      <artifactId>spring-data-snowdrop-starter-infinispan-embedded</artifactId>
     </dependency>
 
     <dependency>

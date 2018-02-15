@@ -20,10 +20,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchCrudRepository;
+import me.snowdrop.data.core.repository.SnowdropCrudRepository;
 import org.springframework.data.domain.Pageable;
 
-public interface BookRepository extends HibernateSearchCrudRepository<Book, Integer> {
+public interface BookRepository extends SnowdropCrudRepository<Book, Integer> {
     Stream<Book> findByTitleLike(String title);
 
     List<Book> findByReleaseDate(LocalDate date, Pageable pageable);
