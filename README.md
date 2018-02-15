@@ -1,1 +1,1 @@
-# spring-boot-hibernate-search-booster
+# spring-boot-snowdrop-spring-data-booster
