@@ -65,8 +65,12 @@ public class BookController {
 
     @ResponseBody
     @GetMapping(path = "/findAuthors", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Book> findAuthors(@RequestParam(name = "author") String author) {
-        return repository.findByAuthorLike(author);
+    public List<Book> findAuthors(@RequestParam(name = "author", required = false) String author) {
+        if (author != null && author.length() > 0) {
+            return repository.findByAuthorLike(author);
+        } else {
+            return getAll();
+        }
     }
 
     @ResponseBody
@@ -119,8 +123,8 @@ public class BookController {
     @ResponseBody
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Book> getAll() {
-        Spliterator<Book> fruits = repository.findAll().spliterator();
-        return StreamSupport.stream(fruits, false).collect(Collectors.toList());
+        Spliterator<Book> books = repository.findAll().spliterator();
+        return StreamSupport.stream(books, false).collect(Collectors.toList());
     }
 
     @ResponseBody
