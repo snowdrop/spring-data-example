@@ -64,6 +64,12 @@ public class BookController {
     }
 
     @ResponseBody
+    @GetMapping(path = "/findAuthors", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Stream<Book> findAuthors(@RequestParam(name = "author") String author) {
+        return repository.findByAuthorLike(author);
+    }
+
+    @ResponseBody
     @GetMapping(path = "/findTitle", produces = MediaType.APPLICATION_JSON_VALUE)
     public Stream<Book> findByTitle(@RequestParam(name = "title") String title) {
         return repository.findByTitleLike(title);

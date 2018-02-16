@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <title>Hibernate Search Mission - Spring Boot</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <link rel="stylesheet" href="awesomplete.css"/>
     <style>
         input[type=number] {
             width: 100%;
@@ -19,6 +20,7 @@
             font-family: 'Open Sans', serif;
         }
     </style>
+    <script src="awesomplete.js" async></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
         function search() {
@@ -48,13 +50,24 @@
                         $("#results").html(JSON.stringify(results)); //TODO: display results correctly
                     });
         }
+
+        function authors() {
+            var input = document.getElementById("author");
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "/api/books/findAuthors?author=" + input.value, true);
+            ajax.onload = function() {
+	            var list = JSON.parse(ajax.responseText).map(function(i) { return i.author; });
+	            new Awesomplete(input,{ list: list });
+            };
+            ajax.send();
+        }
     </script>
 </head>
 <body ng-app="BookManagement" ng-controller="BookManagementController">
 
 <div>
     Author:
-    <input type="text" id="author" name="author">
+    <input id="author" name="author" class="awesomplete" list="authors" onchange="authors();">
     <br> Content:
     <input type="text" id="content" name="content">
     <br> Release date:
