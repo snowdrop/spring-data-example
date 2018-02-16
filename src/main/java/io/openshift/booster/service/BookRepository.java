@@ -24,7 +24,7 @@ import me.snowdrop.data.core.repository.SnowdropCrudRepository;
 import org.springframework.data.domain.Pageable;
 
 public interface BookRepository extends SnowdropCrudRepository<Book, Integer> {
-    Stream<Book> findByAuthorLike(String author);
+    List<Book> findByAuthorLike(String author);
 
     Stream<Book> findByTitleLike(String title);
 

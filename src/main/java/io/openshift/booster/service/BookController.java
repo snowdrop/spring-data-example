@@ -65,7 +65,7 @@ public class BookController {
 
     @ResponseBody
     @GetMapping(path = "/findAuthors", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Stream<Book> findAuthors(@RequestParam(name = "author") String author) {
+    public List<Book> findAuthors(@RequestParam(name = "author") String author) {
         return repository.findByAuthorLike(author);
     }
 
