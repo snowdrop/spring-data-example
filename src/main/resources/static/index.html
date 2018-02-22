@@ -47,7 +47,19 @@
                 })
             })
                     .done(function(results) {
-                        $("#results").html(JSON.stringify(results)); //TODO: display results correctly
+                        $("#results").html(`
+<table>
+ <thead>
+  <td>Col A</td>
+  <td>Col B</td>
+  <td>Col C</td>
+ </thead>
+ <tr>
+  <td>${results.value_a}</td>
+  <td>${results.value_b}</td>
+  <td>${results.value_c}</td>
+ </tr>
+`); //TODO: display results correctly
                     });
         }
 
