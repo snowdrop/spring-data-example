@@ -22,7 +22,8 @@
     </style>
     <script src="awesomplete.min.js" async></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
+</head>
+<script type="text/javascript">
         function search() {
             var author = document.getElementById('author').value;
             var content = document.getElementById('content').value;
@@ -47,12 +48,13 @@
                 })
             })
                     .done(function(results) {
+                        var temp = "";
                         for(var i = 0; i < results.length; i++) {
-                            var temp = '<tr><td>' + results[i].title + '</td>';
-                            temp+= '<td>' + results[i].author + '</td>';
-                            temp+= '<td>' + results[i].releaseDate + '</td></tr>';
-                            $('#tbody').append(temp);
+                            temp += '<tr><td>' + results[i].title + '</td>';
+                            temp += '<td>' + results[i].author + '</td>';
+                            temp += '<td>' + results[i].releaseDate + '</td></tr>';
                         }
+                        $('#tbody').empty().append(temp);
                     });
         }
 
@@ -67,7 +69,6 @@
             ajax.send();
         }
     </script>
-</head>
 <body ng-app="BookManagement" ng-controller="BookManagementController" onload="authors();">
 
 <div>
