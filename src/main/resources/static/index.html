@@ -47,19 +47,12 @@
                 })
             })
                     .done(function(results) {
-                        $("#results").html(`
-<table>
- <thead>
-  <td>Col A</td>
-  <td>Col B</td>
-  <td>Col C</td>
- </thead>
- <tr>
-  <td>${results.value_a}</td>
-  <td>${results.value_b}</td>
-  <td>${results.value_c}</td>
- </tr>
-`); //TODO: display results correctly
+                        for(var i = 0; i < results.length; i++) {
+                            var temp = '<tr><td>' + results[i].title + '</td>';
+                            temp+= '<td>' + results[i].author + '</td>';
+                            temp+= '<td>' + results[i].releaseDate + '</td></tr>';
+                            $('#tbody').append(temp);
+                        }
                     });
         }
 
@@ -73,10 +66,6 @@
             };
             ajax.send();
         }
-
-        // $(document).ready(function () {
-        //    $("#author").on("keyup", authors);
-        // });
     </script>
 </head>
 <body ng-app="BookManagement" ng-controller="BookManagementController" onload="authors();">
@@ -106,6 +95,17 @@
 <hr/>
 
 <div id="results">
+    <table style="width: 50%">
+        <thead>
+        <tr>
+            <th><b>Title</b></th>
+            <th><b>Author</b></th>
+            <th><b>Release date</b></th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
 </div>
 
 </body>
