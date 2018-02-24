@@ -17,7 +17,10 @@
 package io.openshift.booster.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
@@ -45,6 +48,7 @@ public class Book {
 
     @Field
     @SortableField
+    @JsonSerialize(using = IsoLocalDateSerializer.class)
     private LocalDate releaseDate;
 
     public Book() {
@@ -106,5 +110,11 @@ public class Book {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Book) && (Book.class.cast(obj).getId().equals(getId()));
+    }
+
+    public static class IsoLocalDateSerializer extends LocalDateSerializer {
+        protected IsoLocalDateSerializer() {
+            super(DateTimeFormatter.ISO_DATE);
+        }
     }
 }

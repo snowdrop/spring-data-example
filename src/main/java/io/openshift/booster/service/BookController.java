@@ -104,7 +104,7 @@ public class BookController {
         }
         if (StringUtils.hasLength(example.getContent())) {
             List<Book> byContentContains = repository.findByContentContains(example.getContent(), pageable);
-            if (example.getReleaseDate() != null && StringUtils.hasLength(example.getAuthor())) {
+            if (example.getReleaseDate() != null || StringUtils.hasLength(example.getAuthor())) {
                 byContentContains.retainAll(books);
             }
             books = byContentContains;
