@@ -1,0 +1,18 @@
+== Purpose
+
+A booster that demonstrates how to configure and deploy a Spring Boot app using Snowdrop's Spring Data support, its embedded Infinispan support to be exact.
+
+== Deploying and interacting with the booster
+
+=== Spring Boot running locally
+
+* Run the app
+
+[source,bash]
+----
+mvn spring-boot:run
+----
+
+* View app in broswer -- open url http://localhost:8080
+
+TODO
