@@ -50,6 +50,7 @@ public class BoosterApplication {
             .index(Index.ALL)
             .addIndexedEntity(Book.class)
             .addProperty("default.directory_provider", "local-heap")
+            .addProperty("default.analyzer", "org.apache.lucene.analysis.core.KeywordAnalyzer")
             .addProperty("lucene_version", "LUCENE_CURRENT");
 
         return new DefaultCacheManager(globalCfg.build(), cacheCfg.build());

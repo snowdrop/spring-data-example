@@ -46,7 +46,7 @@ public class Book {
     @Field(store = Store.NO)
     private String content;
 
-    @Field
+    @Field(analyze = Analyze.NO)
     @SortableField
     @JsonSerialize(using = IsoLocalDateSerializer.class)
     private LocalDate releaseDate;
