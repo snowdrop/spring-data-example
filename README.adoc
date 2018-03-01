@@ -1,6 +1,6 @@
 == Purpose
 
-A booster that demonstrates how to configure and deploy a Spring Boot app using Snowdrop's Spring Data support, its embedded Infinispan support to be exact.
+A booster that demonstrates how to configure and deploy a Spring Boot app using https://github.com/snowdrop/spring-data-snowdrop[Snowdrop's Spring Data] support, its embedded http://infinispan.org/[Infinispan] support to be exact.
 
 == Deploying and interacting with the booster
 
@@ -15,4 +15,32 @@ mvn spring-boot:run
 
 * View app in broswer -- open url http://localhost:8080
 
-TODO
+You then have 3 fields with which you can limit the search: author (auto-complete), text's content and release date.
+You can also select the order field and direction.
+
+If any results match your critera, they should be listed below, once you hit "Search".
+
+* Spring Data repository usage
+
+The whole idea behind Spring Data is to use this simple repository interfaces.
+This is the one we use in this booster.
+
+[source,java]
+----
+public interface BookRepository extends SnowdropCrudRepository<Book, Integer> {
+    List<Book> findByAuthorLike(String author);
+
+    Stream<Book> findByTitleLike(String title);
+
+    List<Book> findByReleaseDate(LocalDate date, Pageable pageable);
+
+    List<Book> findByAuthor(String author, Pageable pageable);
+
+    List<Book> findByContentContains(String content, Pageable pageable);
+}
+----
+
+=== Snowdrop and Spring Data
+
+Currently we use Infinispan embedded integration.
+But the https://github.com/snowdrop/spring-data-snowdrop[Snowdrop Spring Data] project has other integrations as well -- with JPA, Infinispan remote and Google App Engine's Datastore.
