@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package io.openshift.booster.exception;
+package dev.snowdrop.example.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
-@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-public class UnprocessableEntityException extends RuntimeException {
+public final class BookUtils {
+    public static int generateNextId(Iterable<Book> all) {
+        final Set<Integer> ids = new TreeSet<>(Collections.reverseOrder());
+        all.forEach(fruit -> ids.add(fruit.getId()));
+        return (ids.isEmpty() ? 1 : (ids.iterator().next() + 1));
 
-    public UnprocessableEntityException(String message) {
-        super(message);
     }
-
 }

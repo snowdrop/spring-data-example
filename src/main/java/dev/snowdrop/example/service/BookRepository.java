@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package io.openshift.booster.service;
+package dev.snowdrop.example.service;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Stream;
 
-public final class BookUtils {
-    public static int generateNextId(Iterable<Book> all) {
-        final Set<Integer> ids = new TreeSet<>(Collections.reverseOrder());
-        all.forEach(fruit -> ids.add(fruit.getId()));
-        return (ids.isEmpty() ? 1 : (ids.iterator().next() + 1));
+import me.snowdrop.data.core.repository.SnowdropCrudRepository;
+import org.springframework.data.domain.Pageable;
 
-    }
+public interface BookRepository extends SnowdropCrudRepository<Book, Integer> {
+    List<Book> findByAuthorLike(String author);
+
+    Stream<Book> findByTitleLike(String title);
+
+    List<Book> findByReleaseDate(LocalDate date, Pageable pageable);
+
+    List<Book> findByAuthor(String author, Pageable pageable);
+
+    List<Book> findByContentContains(String content, Pageable pageable);
 }

@@ -18,12 +18,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.openshift.booster</groupId>
-  <artifactId>spring-boot-snowdrop-spring-data</artifactId>
+  <groupId>dev.snowdrop.example</groupId>
+  <artifactId>spring-data</artifactId>
   <version>1-SNAPSHOT</version>
 
-  <name>Spring Boot - Snowdrop Spring Data Booster</name>
-  <description>Spring Boot - Snowdrop Spring Data Booster</description>
+  <name>Spring Boot - Snowdrop Spring Data Example</name>
+  <description>Spring Boot - Snowdrop Spring Data Example</description>
 
   <properties>
     <!-- Spring -->
