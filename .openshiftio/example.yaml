@@ -1,5 +1,5 @@
 name: Spring Boot - Hibernate Search Example
-description: A booster demonstrating how to set up a simple Hibernate Search application with Spring Boot on OpenShift
+description: A example demonstrating how to set up a simple Hibernate Search application with Spring Boot on OpenShift
 versions:
   - id: community
     name: 1.5.8.RELEASE (Community)

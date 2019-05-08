@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.openshift.booster;
+package dev.snowdrop.example;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
@@ -31,10 +31,10 @@ import java.util.Map;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import io.openshift.booster.service.Book;
-import io.openshift.booster.service.BookEnum;
-import io.openshift.booster.service.BookRepository;
-import io.openshift.booster.service.BookUtils;
+import dev.snowdrop.example.service.Book;
+import dev.snowdrop.example.service.BookEnum;
+import dev.snowdrop.example.service.BookRepository;
+import dev.snowdrop.example.service.BookUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +45,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BoosterApplicationTest {
+public class ExampleApplicationTest {
 
     @Value("${local.server.port}")
     private int port;

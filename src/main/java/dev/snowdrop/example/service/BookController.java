@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.openshift.booster.service;
+package dev.snowdrop.example.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import io.openshift.booster.exception.NotFoundException;
-import io.openshift.booster.exception.UnprocessableEntityException;
-import io.openshift.booster.exception.UnsupportedMediaTypeException;
+import dev.snowdrop.example.exception.NotFoundException;
+import dev.snowdrop.example.exception.UnprocessableEntityException;
+import dev.snowdrop.example.exception.UnsupportedMediaTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

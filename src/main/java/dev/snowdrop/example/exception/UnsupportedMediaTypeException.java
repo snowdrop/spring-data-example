@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package io.openshift.booster.service;
+package dev.snowdrop.example.exception;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Stream;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import me.snowdrop.data.core.repository.SnowdropCrudRepository;
-import org.springframework.data.domain.Pageable;
+@ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+public class UnsupportedMediaTypeException extends RuntimeException {
 
-public interface BookRepository extends SnowdropCrudRepository<Book, Integer> {
-    List<Book> findByAuthorLike(String author);
+    public UnsupportedMediaTypeException(String message) {
+        super(message);
+    }
 
-    Stream<Book> findByTitleLike(String title);
-
-    List<Book> findByReleaseDate(LocalDate date, Pageable pageable);
-
-    List<Book> findByAuthor(String author, Pageable pageable);
-
-    List<Book> findByContentContains(String content, Pageable pageable);
 }

@@ -1,8 +1,8 @@
 == Purpose
 
-A booster that demonstrates how to configure and deploy a Spring Boot app using https://github.com/snowdrop/spring-data-snowdrop[Snowdrop's Spring Data] support, its embedded http://infinispan.org/[Infinispan] support to be exact.
+A example that demonstrates how to configure and deploy a Spring Boot app using https://github.com/snowdrop/spring-data-snowdrop[Snowdrop's Spring Data] support, its embedded http://infinispan.org/[Infinispan] support to be exact.
 
-== Deploying and interacting with the booster
+== Deploying and interacting with the example
 
 === Spring Boot running locally
 
@@ -23,7 +23,7 @@ If any results match your critera, they should be listed below, once you hit "Se
 * Spring Data repository usage
 
 The whole idea behind Spring Data is to use this simple repository interfaces.
-This is the one we use in this booster.
+This is the one we use in this example.
 
 [source,java]
 ----

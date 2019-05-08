@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.openshift.booster;
+package dev.snowdrop.example;
 
-import io.openshift.booster.service.Book;
-import io.openshift.booster.service.BookEnum;
+import dev.snowdrop.example.service.Book;
+import dev.snowdrop.example.service.BookEnum;
 import me.snowdrop.data.core.repository.config.EnableSnowdropRepositories;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -33,10 +33,10 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableSnowdropRepositories
-public class BoosterApplication {
+public class ExampleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BoosterApplication.class, args);
+        SpringApplication.run(ExampleApplication.class, args);
     }
 
     @Bean(destroyMethod = "stop")
