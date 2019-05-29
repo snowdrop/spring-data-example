@@ -20,7 +20,7 @@
 
   <groupId>dev.snowdrop.example</groupId>
   <artifactId>spring-data</artifactId>
-  <version>1-SNAPSHOT</version>
+  <version>1</version>
 
   <name>Spring Boot - Snowdrop Spring Data Example</name>
   <description>Spring Boot - Snowdrop Spring Data Example</description>
